@@ -94,10 +94,10 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
             # reinforcement learning
             assert len(set(batch['keys'])) == 1 # make sure it's the same dialo
             report, success, match, bleu, nll_reward, nll_reward_np = agent.run(batch, evaluator, max_words=rl_config.max_words, temp=rl_config.temperature)
-            # jianhong: this is the reward function during training
+            # : this is the reward function during training
             reward = float(success)
             reward_dict = {'success': float(success), 'match': float(match), 'bleu': float(bleu)}
-            # jianhong
+            # 
             if rl_config.sl_loss2reward:
                 reward_dict['nll'] = nll_reward
                 nll_reward_record = []
@@ -119,7 +119,7 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
             # print loss sometimes
             episode_cnt += 1
             if episode_cnt % rl_config.print_frequency == 0:
-                # jianhong: fit hierarchical rl, display success rate only
+                # : fit hierarchical rl, display success rate only
                 if rl_config.sl_loss2reward:
                     # print (agent.all_rewards['nll'])
                     logger.info("{}/{} episode: mean_reward {} , mean_nll {} and mean_bleu {} for last {} episodes".format(episode_cnt,
@@ -146,7 +146,7 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
                 # TODO:  train reward
                 agent.print_dialog(agent.dlg_history, reward, stats)
 
-                # jianhong: fit hierarchical rl, display success rate only
+                # : fit hierarchical rl, display success rate only
                 logger.info('mean_reward {} for last {} episodes'.format(np.mean(agent.all_rewards['success'][-rl_config.record_frequency:]), rl_config.record_frequency))
                 
                 # validation 
@@ -158,7 +158,7 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
                 tb_logger.add_scalar_summary(stats, episode_cnt)
 
                 # save model
-                # jianhong: consider bleu into the evaluation metric
+                # : consider bleu into the evaluation metric
                 if (v_success+v_match)/2+v_bleu > best_rewards:
                     cur_time = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
                     logger.info('*** Model Saved with match={} success={} bleu={}, at {}. ***\n'.format(v_match, v_success, v_bleu, cur_time))
@@ -170,7 +170,7 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
                         remove_model = saved_models[0]
                         saved_models = saved_models[-last_n_model:]
                         os.remove(os.path.join(rl_config.saved_path, "{}-model".format(remove_model)))
-                    # jianhong: new evaluation metric
+                    # : new evaluation metric
                     best_rewards = (v_success+v_match)/2+v_bleu
 
             model.train()

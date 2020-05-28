@@ -54,7 +54,6 @@ if rl_config.forward_only:  # load previous rl model
 sl_config = Pack(json.load(open(os.path.join(pretrain_path, 'config.json'))))
 sl_config['dropout'] = 0.0
 sl_config['use_gpu'] = rl_config.use_gpu
-# jianhong: add flag to control beam search in test
 sl_config['gen_type'] = args.gen_type
 sl_config['beam_size'] = args.beam_size
 rl_config.saved_path = saved_path
@@ -91,7 +90,6 @@ model = model_class(corpus, sl_config)
 if sl_config.use_gpu:
     model.cuda()
 model_ids = sorted([int(p.replace('-model', '')) for p in os.listdir(pretrain_path) if 'model' in p])
-# jianhong: control the version of pertrained model
 best_epoch = model_ids[-1]
 model.load(pretrain_path, best_epoch)
 model.print_summary()
