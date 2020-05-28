@@ -1,0 +1,12 @@
+data/camrest
+data/multiwoz_2.0
+data/multiwoz_2.1
+outputs/
+latent_dialog/__pycache__/
+latent_dialog/agents/__pycache__/
+latent_dialog/data_loaders/__pycache__/
+latent_dialog/enc2dec/__pycache__/
+latent_dialog/evaluators/__pycache__
+latent_dialog/models/__pycache__/
+latent_dialog/normalizer/__pycache__/
+*.pyc
