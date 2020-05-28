@@ -316,7 +316,6 @@ def train(model, train_data, val_data, config, evaluator):
                     best_valid_loss = valid_loss
 
         # Early stop 
-        # By: YZ. currently no early stopping in configs
         if config.early_stop and patience <= epoch:
             logger.info('*** Early stop due to run out of patience ***')
             break

@@ -47,7 +47,7 @@ class BLEUScorer(object):
 
             for idx, hyp in enumerate(hyps):
                 if len(hyp) == 0:
-                    hyp = [' ']  # By YZ: to avoid null str
+                    hyp = [' ']  #   to avoid null str
                 for i in range(4):
                     # accumulate ngram counts
                     hypcnts = Counter(ngrams(hyp, i + 1))
