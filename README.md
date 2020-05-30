@@ -5,7 +5,8 @@
 
 1. install conda environment                                        
 ```bash
-conda create -n hdno python-3.6
+conda create -n hdno python=3.6
+conda activate hdno
 ```
 
 2.  install requirements
