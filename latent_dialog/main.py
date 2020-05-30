@@ -410,6 +410,10 @@ def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=No
                 logger.debug('True: {}'.format(true_str, ))
                 logger.debug('Pred: {}'.format(pred_str, ))
                 logger.debug('-' * 40)
+            dest_f.write('%s-prev_ctx = %s\n' % (keys[b_id], prev_ctx,))
+            dest_f.write('True: {}\n'.format(true_str, ))
+            dest_f.write('Pred: {}\n'.format(pred_str, ))
+            dest_f.write('-' * 40+"\n")
 
             if  vec_f is not None:
                 sample = sample_z[b_id]
