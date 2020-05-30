@@ -6,11 +6,11 @@ from latent_dialog.criterions import NLLEntropy, CatKLLoss, Entropy, NormKLLoss
 from latent_dialog.woz_util  import SYS, EOS, PAD, BOS
 from torch.autograd import Variable
 import torch as th
-from latent_dialog.enc2dec.encoders import RnnUttEncoder, InterAttn
+from latent_dialog.enc2dec.encoders import RnnUttEncoder
 
 
 
-class OfflineRlAgent(object):
+class RlAgent(object):
     def __init__(self, model, corpus, args, name, tune_pi_only):
         self.model = model
         self.corpus = corpus
@@ -102,15 +102,15 @@ class OfflineRlAgent(object):
 
 
         
-class OfflineHierarchicalRlAgent(OfflineRlAgent):
+class HierarchicalRlAgent(RlAgent):
     def __init__(self, model, corpus, args, name, tune_pi_only):
-        super(OfflineHierarchicalRlAgent, self).__init__(model, corpus, args, name, tune_pi_only)
+        super(HierarchicalRlAgent, self).__init__(model, corpus, args, name, tune_pi_only)
         # for n, p in self.model.named_parameters():
         #     if 'utt' in n or 'c2z' in n or 'inter_attention' in n:
         #         print ('This is the name {}'.format(n))
         if self.args.train_state_extractor:
             self.opt_state = optim.SGD(
-                        [p for n, p in self.model.named_parameters() if 'utt' in n or 'inter_attention' in n],
+                        [p for n, p in self.model.named_parameters() if 'utt' in n ],
                         lr=self.args.state_extractor_lr,
                         momentum=self.args.momentum,
                         nesterov=(self.args.nesterov and self.args.momentum > 0),
@@ -305,40 +305,26 @@ class OfflineHierarchicalRlAgent(OfflineRlAgent):
         if self.args.low_level and self.curr_level=='low':
             if self.args.success2reward:
                 for lp, r in zip(self.logprobs['low_level'], rewards['success']['low']):
-                    # print ('This is the success of low: ', r)
-                    # if r.item() < -1.2:
-                    #     continue
-                    self.loss -= lp * self.args.alpha * r
+                    self.loss -= lp * (1 - self.args.alpha) * r
             if self.args.bleu2reward:
                 for lp, r in zip(self.logprobs['low_level'], rewards['bleu']['low']):
-                    self.loss -= lp * self.beta * r
-            if self.args.sl_loss2reward:
+                    self.loss -= lp * self.alpha * r
+            if self.args.disc2reward:
                 for lp, r in zip(self.logprobs['low_level'], low_level_nll_rewards):
-                    # print ('low: ', r)
-                    # print ('This is the disc of low: ', r)
-                    # if np.abs(r.item()) < 12: 
-                    # if 1 < np.abs(r.item()): 
-                    self.loss -= lp * self.beta * r
+                    self.loss -= lp * self.alpha * r
             self.low_cnt += 1
 
         # add flag to control the freq of update on high level policy
         if self.args.high_level and self.curr_level=='high':
             if self.args.success2reward:
                 for lp, r in zip(self.logprobs['high_level'], rewards['success']['high']):
-                    # print ('This is the success of high: ', r)
-                    # if r.item() < -1.2:
-                    #     continue
-                    self.loss -= lp * self.args.alpha * r
+                    self.loss -= lp * (1 - self.args.alpha) * r
             if self.args.bleu2reward:
                 for lp, r in zip(self.logprobs['high_level'], rewards['bleu']['high']):
-                    self.loss -= lp * self.beta * r
-            if self.args.sl_loss2reward:
+                    self.loss -= lp * self.alpha * r
+            if self.args.disc2reward:
                 for lp, r in zip(self.logprobs['high_level'], high_level_nll_rewards):
-                    # print ('high: ', r)
-                    # print ('This is the disc of high: ', r)
-                    # if np.abs(r.item()) < 12:
-                    # if 1 < np.abs(r.item()): 
-                    self.loss -= lp * self.beta * r
+                    self.loss -= lp * self.alpha * r
             self.high_cnt += 1
 
         if self.args.high_level and self.curr_level=='high':
@@ -350,8 +336,6 @@ class OfflineHierarchicalRlAgent(OfflineRlAgent):
             self.opt_high.step()
             if self.args.train_state_extractor:
                 self.opt_state.step()
-            # if self.args.lr_scheduler and self.update_n%self.args.scheduler_decay_freq==0:
-            #     self.opt_high_sch.step()
             if self.args.low_level:
                 if self.high_cnt == self.args.high_freq:
                     self.curr_level = 'low'
@@ -365,8 +349,6 @@ class OfflineHierarchicalRlAgent(OfflineRlAgent):
             self.opt_low.step()
             if self.args.train_state_extractor:
                 self.opt_state.step()
-            # if self.args.lr_scheduler and self.update_n%self.args.scheduler_decay_freq==0:
-            #     self.opt_low_sch.step()
             if self.args.high_level:
                 if self.low_cnt == self.args.low_freq:
                     self.curr_level = 'high'

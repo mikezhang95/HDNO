@@ -72,35 +72,7 @@ class EncoderGRUATTN(BaseRNN):
             attn = th.sum(th.mul(embedded, prob), 1) # (batch_size, 2*nhid_attn)
             
             return attn
-
-
-class FeatureProjecter(nn.Module):
-    def __init__(self, input_dropout_p, input_size, output_size):
-        super(FeatureProjecter, self).__init__()
-        self.input_dropout = nn.Dropout(p=input_dropout_p)
-        self.sel_encoder = nn.Sequential(
-            nn.Linear(input_size, output_size), 
-            nn.Tanh()
-        )
-
-    def forward(self, goals_h, attn_outs):
-        h = th.cat([attn_outs, goals_h], 1) # (batch_size, 2*nhid_attn+goal_nhid)
-        h = self.input_dropout(h)
-        h = self.sel_encoder.forward(h) # (batch_size, nhid_sel)
-        return h
-
-
-class SelectionClassifier(nn.Module):
-    def __init__(self, selection_length, input_size, output_size):
-        super(SelectionClassifier, self).__init__()
-        self.sel_decoders = nn.ModuleList()
-        for _ in range(selection_length):
-            self.sel_decoders.append(nn.Linear(input_size, output_size))
-
-    def forward(self, proj_outs):
-        outs = [decoder.forward(proj_outs).unsqueeze(1) for decoder in self.sel_decoders] # outcome_len*(batch_size, 1, outcome_vocab_size)
-        outs = th.cat(outs, 1) # (batch_size, outcome_len, outcome_vocab_size)
-        return outs
+            
 
 
 class Discriminator(BaseRNN):

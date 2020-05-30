@@ -98,7 +98,7 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
             reward = float(success)
             reward_dict = {'success': float(success), 'match': float(match), 'bleu': float(bleu)}
             # 
-            if rl_config.sl_loss2reward:
+            if rl_config.disc2reward:
                 reward_dict['nll'] = nll_reward
                 nll_reward_record = []
                 for b_r in nll_reward_np:
@@ -120,7 +120,7 @@ def reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluato
             episode_cnt += 1
             if episode_cnt % rl_config.print_frequency == 0:
                 # : fit hierarchical rl, display success rate only
-                if rl_config.sl_loss2reward:
+                if rl_config.disc2reward:
                     # print (agent.all_rewards['nll'])
                     logger.info("{}/{} episode: mean_reward {} , mean_nll {} and mean_bleu {} for last {} episodes".format(episode_cnt,
                                                 train_data.num_batch*rl_config.num_epoch,

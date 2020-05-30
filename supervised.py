@@ -16,8 +16,6 @@ import torch as th
 from latent_dialog.utils import Pack, prepare_dirs_loggers, set_seed
 from latent_dialog.data_loaders import MultiWozCorpus, MultiWozDataLoader
 from latent_dialog.evaluators import MultiWozEvaluator
-from latent_dialog.data_loaders import CamRestCorpus, CamRestDataLoader
-from latent_dialog.evaluators import CamRestEvaluator 
 import latent_dialog.models as models
 from latent_dialog.main import  train, validate, generate
 
