@@ -207,7 +207,7 @@ class HDNO(BaseModel):
                     disc_loss = self.nll(disc_log_prob_real, labels)
                     # construct loss for learning disc by synthetic samples from gen
                     if self.config.gen_guide and epoch >= self.config.warmup:
-                        disc_loss += - self.config.gamma * th.mean(th.sum(disc_log_prob_fake*disc_gen_labels.detach(), dim=-1))
+                        disc_loss += - self.config.eta * th.mean(th.sum(disc_log_prob_fake*disc_gen_labels.detach(), dim=-1))
                     result['disc_loss'] = disc_loss
                 # use a kl-divergence as a reg
                 if self.config.reg in ['kl']:
