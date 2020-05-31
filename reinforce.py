@@ -121,9 +121,8 @@ with open(os.path.join(saved_path, '{}_valid_file.txt'.format(best_episode)), 'w
 
 # Save latent action...
 vec_f = open(os.path.join(saved_path, 'vec_file.tsv'), 'w')
-label_f = open(os.path.join(saved_path, 'label_file.tsv'), 'w')
 with open(os.path.join(saved_path, '{}_test_file.txt'.format(best_episode)), 'w') as f:
-    generate(model, test_data, sl_config, evaluator, dest_f=f, vec_f=vec_f, label_f=label_f)
+    generate(model, test_data, sl_config, evaluator, dest_f=f, vec_f=vec_f)
 
 
 end_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))

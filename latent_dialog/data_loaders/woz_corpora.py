@@ -60,22 +60,16 @@ class MultiWozCorpus(object):
 
         for key, raw_dlg in data.items():
             # raw_dlg.keys: ['sys', 'bs', 'db', 'goal', 'usr']
-            norm_dlg = [Pack(speaker=USR, utt=[BOS, BOD, EOS], bs=[0.0]*self.bs_size, db=[0.0]*self.db_size, act=["Null"])]
+            norm_dlg = [Pack(speaker=USR, utt=[BOS, BOD, EOS], bs=[0.0]*self.bs_size, db=[0.0]*self.db_size)]
 
-            if len(raw_dlg["dialog_acts"]) < len(raw_dlg['db']):
-                a = len(raw_dlg["dialog_acts"])
-                b = len(raw_dlg['db'])
-                raw_dlg["dialog_acts"].extend([["Null"]]*(b-a))
-
-           
             for t_id in range(len(raw_dlg['db'])):
                 usr_utt = [BOS] + self.tokenize(raw_dlg['usr'][t_id]) + [EOS]
                 sys_utt = [BOS] + self.tokenize(raw_dlg['sys'][t_id]) + [EOS]
-                norm_dlg.append(Pack(speaker=USR, utt=usr_utt, db=raw_dlg['db'][t_id], bs=raw_dlg['bs'][t_id],act=["Null"]))
-                norm_dlg.append(Pack(speaker=SYS, utt=sys_utt, db=raw_dlg['db'][t_id], bs=raw_dlg['bs'][t_id], act=raw_dlg['dialog_acts'][t_id]))
+                norm_dlg.append(Pack(speaker=USR, utt=usr_utt, db=raw_dlg['db'][t_id], bs=raw_dlg['bs'][t_id]))
+                norm_dlg.append(Pack(speaker=SYS, utt=sys_utt, db=raw_dlg['db'][t_id], bs=raw_dlg['bs'][t_id]))
                 all_sent_lens.extend([len(usr_utt), len(sys_utt)])
             # To stop dialog
-            norm_dlg.append(Pack(speaker=USR, utt=[BOS, EOD, EOS], bs=[0.0]*self.bs_size, db=[0.0]*self.db_size,act=["Null"]))
+            norm_dlg.append(Pack(speaker=USR, utt=[BOS, EOD, EOS], bs=[0.0]*self.bs_size, db=[0.0]*self.db_size))
             # if self.config.to_learn == 'usr':
             #     norm_dlg.append(Pack(speaker=USR, utt=[BOS, EOD, EOS], bs=[0.0]*self.bs_size, db=[0.0]*self.db_size))
             all_dlg_lens.append(len(raw_dlg['db']))
@@ -160,8 +154,8 @@ class MultiWozCorpus(object):
             for turn in dlg.dlg:
                 id_turn = Pack(utt=self._sent2id(turn.utt),
                                speaker=turn.speaker,
-                               db=turn.db, bs=turn.bs,
-                               act=turn.act)
+                               db=turn.db, bs=turn.bs
+                               )
                 id_dlg.append(id_turn)
             id_goal = self._goal2id(dlg.goal)
             results.append(Pack(dlg=id_dlg, goal=id_goal, key=dlg.key))

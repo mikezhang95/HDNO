@@ -103,11 +103,9 @@ class MultiWozDataLoader(BaseDataLoader):
 
         # bs_{t-1}, bs_{t+1}, db_{t-1}, db_{t+1}
         out_bs_prev, out_bs_next, out_db_prev, out_db_next = [] , [], [], []
-        dialog_acts = []
 
         for j, row in enumerate(rows):
             in_row, out_row, goal_row = row.context, row.response, row.goal
-            dialog_acts.append(out_row.act)
 
             # source context
             keys.append(row.key)
@@ -187,8 +185,8 @@ class MultiWozDataLoader(BaseDataLoader):
                     bs_next=vec_out_bs_next,
                     bs_prev=vec_out_bs_prev,
                     db_next=vec_out_db_next,
-                    db_prev=vec_out_db_prev,
-                    dialog_acts=dialog_acts)
+                    db_prev=vec_out_db_prev
+                    )
 
     def clone(self):
         return MultiWozDataLoader(self.mode, self.raw_data, self.config)

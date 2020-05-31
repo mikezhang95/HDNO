@@ -324,14 +324,12 @@ def validate(model, data, config, batch_cnt=None):
     return valid_loss
 
 
-def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=None, label_f=None):
+def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=None):
     """
         Args:
             - evalutor: this is used to calculate bleu/match/success
     """
 
-    if label_f is not None:
-        label_f.write("true_str\tpred_str\tdialog_act\n")
     model.eval()
     batch_cnt = 0
     generated_dialogs = defaultdict(list)
@@ -357,7 +355,6 @@ def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=No
         ctx = batch.get('contexts')  # (batch_size, max_ctx_len, max_utt_len)
         ctx_len = batch.get('context_lens')  # (batch_size, )
         keys = batch['keys']
-        dialog_acts = batch['dialog_acts']
 
         sample_z = outputs["sample_z"].cpu().data.numpy()
 
@@ -390,10 +387,8 @@ def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=No
 
             if  vec_f is not None:
                 sample = sample_z[b_id]
-                act = "&".join(dialog_acts[b_id])
                 sample_str = "\t".join( str(x) for x in sample )
                 vec_f.write(sample_str + "\n")
-                label_f.write("%s\t%s\t%s\n"%(true_str,pred_str,act))
 
 
     task_report, success, match, bleu  = evaluator.evaluateModel(generated_dialogs, real_dialogues=real_dialogs, mode=data.name)
