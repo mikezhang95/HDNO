@@ -155,7 +155,7 @@ class HierarchicalRlAgent(RlAgent):
             self.curr_level = 'high'
         self.low_cnt = 0
         self.high_cnt = 0
-        self.beta = self.args.beta
+        self.alpha = self.args.alpha
         self.rl_clip = self.args.rl_clip
         
     def construct_nll_reward(self, log_softmax, symbol):
@@ -298,14 +298,11 @@ class HierarchicalRlAgent(RlAgent):
 
         self.loss = 0
 
-        if self.args.kl:
-            self.loss += self.args.eta * self.kl_loss
-
         # estimate the loss using one MonteCarlo rollout
         if self.args.low_level and self.curr_level=='low':
             if self.args.success2reward:
                 for lp, r in zip(self.logprobs['low_level'], rewards['success']['low']):
-                    self.loss -= lp * (1 - self.args.alpha) * r
+                    self.loss -= lp * (1 - self.alpha) * r
             if self.args.bleu2reward:
                 for lp, r in zip(self.logprobs['low_level'], rewards['bleu']['low']):
                     self.loss -= lp * self.alpha * r
@@ -318,7 +315,7 @@ class HierarchicalRlAgent(RlAgent):
         if self.args.high_level and self.curr_level=='high':
             if self.args.success2reward:
                 for lp, r in zip(self.logprobs['high_level'], rewards['success']['high']):
-                    self.loss -= lp * (1 - self.args.alpha) * r
+                    self.loss -= lp * (1 - self.alpha) * r
             if self.args.bleu2reward:
                 for lp, r in zip(self.logprobs['high_level'], rewards['bleu']['high']):
                     self.loss -= lp * self.alpha * r
@@ -357,7 +354,7 @@ class HierarchicalRlAgent(RlAgent):
         if self.args.lr_scheduler and self.update_n%self.args.scheduler_decay_freq==0:
             self.opt_high_sch.step()
             self.opt_low_sch.step()
-        if self.args.beta_scheduler and self.update_n%self.args.beta_rise_freq==0:
-            self.beta *= (1+self.args.beta_rise)
+        if self.args.alpha_scheduler and self.update_n%self.args.alpha_rise_freq==0:
+            self.alpha *= (1+self.args.alpha_rise)
         if self.args.rl_clip_scheduler and self.update_n%self.args.rl_clip_freq==0:
             self.rl_clip *= self.args.rl_clip_decay
