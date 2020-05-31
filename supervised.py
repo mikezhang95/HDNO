@@ -36,9 +36,9 @@ config["beam_size"] = args.beam_size
 
 # set random_seed/logger/save_path
 set_seed(config.random_seed)
-stats_path = 'outputs'
+
 alias = args.alias if args.alias == "" else '-' + args.alias
-saved_path = os.path.join(stats_path, args.config_name + alias)
+saved_path = os.path.join("./outputs", args.config_name + alias)
 if not os.path.exists(saved_path):
     os.makedirs(saved_path)
 config.saved_path = saved_path

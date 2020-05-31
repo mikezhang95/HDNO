@@ -18,8 +18,6 @@ import torch as th
 from latent_dialog.utils import Pack, prepare_dirs_loggers, set_seed
 from latent_dialog.data_loaders import MultiWozCorpus, MultiWozDataLoader
 from latent_dialog.evaluators import MultiWozEvaluator
-from latent_dialog.data_loaders import CamRestCorpus, CamRestDataLoader
-from latent_dialog.evaluators import CamRestEvaluator 
 import latent_dialog.models as models
 from latent_dialog.main import  reinforce, validate, generate
 import  latent_dialog.agents as agents 
@@ -32,7 +30,7 @@ parser.add_argument('--config_name', type=str, default="rl_cat")
 parser.add_argument('--forward_only', action='store_true')
 parser.add_argument('--gen_type', type=str, default='greedy')
 parser.add_argument('--beam_size', type=int, default=5)
-parser.add_argument('--alias', type=str, default="woz2.0")
+parser.add_argument('--alias', type=str, default="")
 args = parser.parse_args()
 rl_config_path = "./configs/" + args.config_name + ".conf"
 rl_config = Pack(json.load(open(rl_config_path)))
@@ -42,15 +40,13 @@ rl_config["forward_only"] = args.forward_only
 # set random_seed/logger/save_path
 set_seed(rl_config.random_seed)
 
-pretrain_path = './outputs/' + rl_config.pretrain_folder + '/'   # path for sl
-saved_path = os.path.join('./outputs/', args.config_name + '-' + args.alias) # path for rl
+alias = args.alias if args.alias == "" else '-' + args.alias
+saved_path = os.path.join('./outputs/', args.config_name + alias) # path for rl
 if not os.path.exists(saved_path):
     os.makedirs(saved_path)
 
-if rl_config.forward_only:  # load previous rl model
-    rl_config = Pack(json.load(open(os.path.join(saved_path, 'config.json'))))
-    rl_config['forward_only'] = True
 
+pretrain_path = './outputs/' + rl_config.pretrain_folder + '/'   # path for sl
 sl_config = Pack(json.load(open(os.path.join(pretrain_path, 'config.json'))))
 sl_config['dropout'] = 0.0
 sl_config['use_gpu'] = rl_config.use_gpu
@@ -113,7 +109,7 @@ if best_episode is None:
     best_episode= model_ids[-1]
 model.load(saved_path, best_episode)
 
-##################### Validation #####################
+#################### Validation #####################
 logger.info("\n***** Forward Only Evaluation on val/test *****")
 logger.info("$$$ Load {}-model".format(best_episode))
 validate(model, val_data, sl_config)
