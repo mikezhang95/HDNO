@@ -27,8 +27,8 @@ pip install -r requirements.txt
 ### Reproduce the result
 1. prepare data
 ```
-unzip data/multiwoz_2.0.zip
-unzip data/multiwoz_2.1.zip
+unzip data/multiwoz_2.0.zip -d data
+unzip data/multiwoz_2.1.zip -d data
 ```
 
 2. run Supervised Learning

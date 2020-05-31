@@ -20,16 +20,15 @@ class MultiWozDataLoader(BaseDataLoader):
         self.raw_data = data
         self.config = config
         self.max_utt_len = config.max_utt_len
-        self.data, self.indexes, self.batch_indexes = self.flatten_dialog(data, config.backward_size)
+        self.data, self.indexes, self.batch_indexes = self.flatten_dialog(data)
         self.data_size = len(self.data)
         self.domains = ['hotel', 'restaurant', 'train', 'attraction', 'hospital', 'police', 'taxi']
 
-    def flatten_dialog(self, data, backward_size):
+    def flatten_dialog(self, data):
         """
             Reorganize data in <conext, response> pairs.
             Args:
                 - data: 
-                - backward_size: merge past {} turns' states as context
         """
         results = []
         indexes = []
@@ -43,7 +42,7 @@ class MultiWozDataLoader(BaseDataLoader):
                 if dlg.dlg[i].speaker == USR:
                     continue
                 e_idx = i
-                s_idx = max(0, e_idx - backward_size)
+                s_idx = max(0, e_idx - 1)
                 response = dlg.dlg[i].copy()
                 response['utt'] = self.pad_to(self.max_utt_len, response.utt, do_pad=False)
                 resp_set.add(json.dumps(response.utt))

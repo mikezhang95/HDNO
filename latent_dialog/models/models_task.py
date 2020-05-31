@@ -57,7 +57,7 @@ class HDNO(BaseModel):
 
         ### decoder 
         self.z_embedding_x2y = nn.Linear(self.y_size + self.utt_encoder.output_size + self.bs_size + self.db_size, self.config.dec_cell_size, bias=True)
-        
+
         self.decoder_x2y = DecoderRNN(input_dropout_p=self.config.dropout,
                                   rnn_cell=self.config.dec_rnn_cell,
                                   input_size=self.config.embed_size,
@@ -203,6 +203,8 @@ class HDNO(BaseModel):
                     disc_log_prob_real, disc_logits_real = self.discriminator(batch_size=batch_size, 
                                                                             dec_inputs=disc_real_inputs, 
                                                                             dec_init_state=dec_init_state_disc)
+                    # construct loss for learning disc from real samples
+                    disc_loss = self.nll(disc_log_prob_real, labels)
                     # construct loss for learning disc by synthetic samples from gen
                     if self.config.gen_guide and epoch >= self.config.warmup:
                         disc_loss += - self.config.gamma * th.mean(th.sum(disc_log_prob_fake*disc_gen_labels.detach(), dim=-1))
