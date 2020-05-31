@@ -206,10 +206,7 @@ def train(model, train_data, val_data, config, evaluator):
 
     # training parameters
     patience, batch_cnt, best_epoch = 10, 0, 0
-    if config.store_sl_best:
-        valid_score_threshold, best_valid_score = 0.0, 0.0
-    else:
-        valid_loss_threshold, best_valid_loss = np.inf, np.inf
+    valid_loss_threshold, best_valid_loss = np.inf, np.inf
     
     train_loss = LossManager()
     best_rewards = 0
@@ -272,48 +269,25 @@ def train(model, train_data, val_data, config, evaluator):
         stats = {'val/success': success, 'val/match': match, 'val/bleu': bleu, "val/loss": valid_loss}
         tb_logger.add_scalar_summary(stats, batch_cnt)
 
-        if config.store_sl_best:
-            valid_score = 0.5 * (success + match) + bleu
-            if epoch >= config.warmup:
-                # Save Models if valid loss decreases
-                if valid_score > best_valid_score:
-                    if valid_score >= valid_score_threshold * config.improve_threshold:
-                        patience = max(patience, epoch*config.patient_increase)
-                        valid_score_threshold = valid_score
-                        logger.info('Update patience to {}'.format(patience))
+        if epoch >= config.warmup:
+            # Save Models if valid loss decreases
+            if valid_loss < best_valid_loss:
+                if valid_loss <= valid_loss_threshold * config.improve_threshold:
+                    patience = max(patience, epoch*config.patient_increase)
+                    valid_loss_threshold = valid_loss
+                    logger.info('Update patience to {}'.format(patience))
 
-                    if config.save_model:
-                        cur_time = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
-                        logger.info('*** Model Saved with score = {}, at {}. ***'.format(valid_score, cur_time))
-                        model.save(config.saved_path, epoch)
-                        best_epoch = epoch
-                        saved_models.append(epoch)
-                        if len(saved_models) > last_n_model:
-                            remove_model = saved_models[0]
-                            saved_models = saved_models[-last_n_model:]
-                            os.remove(os.path.join(config.saved_path, "{}-model".format(remove_model)))
-
-                    best_valid_score = valid_score
-        else:
-            if epoch >= config.warmup:
-                # Save Models if valid loss decreases
-                if valid_loss < best_valid_loss:
-                    if valid_loss <= valid_loss_threshold * config.improve_threshold:
-                        patience = max(patience, epoch*config.patient_increase)
-                        valid_loss_threshold = valid_loss
-                        logger.info('Update patience to {}'.format(patience))
-
-                    if config.save_model:
-                        cur_time = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
-                        logger.info('*** Model Saved with valid_loss = {}, at {}. ***'.format(valid_loss, cur_time))
-                        model.save(config.saved_path, epoch)
-                        best_epoch = epoch
-                        saved_models.append(epoch)
-                        if len(saved_models) > last_n_model:
-                            remove_model = saved_models[0]
-                            saved_models = saved_models[-last_n_model:]
-                            os.remove(os.path.join(config.saved_path, "{}-model".format(remove_model)))
-                    best_valid_loss = valid_loss
+                if config.save_model:
+                    cur_time = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+                    logger.info('*** Model Saved with valid_loss = {}, at {}. ***'.format(valid_loss, cur_time))
+                    model.save(config.saved_path, epoch)
+                    best_epoch = epoch
+                    saved_models.append(epoch)
+                    if len(saved_models) > last_n_model:
+                        remove_model = saved_models[0]
+                        saved_models = saved_models[-last_n_model:]
+                        os.remove(os.path.join(config.saved_path, "{}-model".format(remove_model)))
+                best_valid_loss = valid_loss
 
         # Early stop 
         if config.early_stop and patience <= epoch:
@@ -326,10 +300,7 @@ def train(model, train_data, val_data, config, evaluator):
         logger.info('\n***** Epoch {}/{} *****'.format(epoch+1, config.num_epoch))
         sys.stdout.flush()
     
-    if config.store_sl_best:
-        logger.info('Training Ends. Best validation score = %f' % (best_valid_score, ))
-    else:
-        logger.info('Training Ends. Best validation loss = %f' % (best_valid_loss, ))
+    logger.info('Training Ends. Best validation loss = %f' % (best_valid_loss, ))
     return best_epoch
 
 
