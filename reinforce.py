@@ -59,9 +59,6 @@ logger = logging.getLogger()
 start_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
 logger.info('[START]\n{}\n{}'.format(start_time, '=' * 30))
 
-# save config
-with open(os.path.join(saved_path, 'config.json'), 'w') as f:
-    json.dump(rl_config, f, indent=4)  # sort_keys=True
 
 # load dataset dependent (corpus, context-to-response, evaluator)
 if rl_config.data_name.startswith("camrest"):
@@ -99,6 +96,9 @@ agent = agent_class(model, corpus, rl_config, name='System', tune_pi_only=rl_con
 ##################### Training #####################
 best_episode = None
 if not rl_config.forward_only:
+    # save config
+    with open(os.path.join(saved_path, 'config.json'), 'w') as f:
+        json.dump(rl_config, f, indent=4)  # sort_keys=True
     try:
         best_episode = reinforce(agent, model, train_data, val_data, rl_config, sl_config, evaluator)
     except KeyboardInterrupt:
@@ -119,7 +119,7 @@ validate(model, test_data, sl_config)
 with open(os.path.join(saved_path, '{}_valid_file.txt'.format(best_episode)), 'w') as f:
     generate(model, val_data, sl_config, evaluator, dest_f=f)
 
-# Save latent action...
+# Save latent action 
 vec_f = open(os.path.join(saved_path, 'vec_file.tsv'), 'w')
 with open(os.path.join(saved_path, '{}_test_file.txt'.format(best_episode)), 'w') as f:
     generate(model, test_data, sl_config, evaluator, dest_f=f, vec_f=vec_f)
