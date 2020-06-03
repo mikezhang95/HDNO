@@ -324,7 +324,7 @@ def validate(model, data, config, batch_cnt=None):
     return valid_loss
 
 
-def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=None):
+def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=None, label_f=None):
     """
         Args:
             - evalutor: this is used to calculate bleu/match/success
@@ -389,6 +389,9 @@ def generate(model, data, config, evaluator, verbose=True, dest_f=None, vec_f=No
                 sample = sample_z[b_id]
                 sample_str = "\t".join( str(x) for x in sample )
                 vec_f.write(sample_str + "\n")
+
+            if label_f is not None:
+                label_f.write("%s\t%s\n"%(true_str, pred_str))
 
 
     task_report, success, match, bleu  = evaluator.evaluateModel(generated_dialogs, real_dialogues=real_dialogs, mode=data.name)
