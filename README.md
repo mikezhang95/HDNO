@@ -25,6 +25,8 @@ pip install -r requirements.txt
     
 
 ### Reproduce the result
+For the convenience of reproducing the results shown in paper, we give simple bash scripts to do it.
+
 1. prepare data
 ```
 unzip data/multiwoz_2.0.zip -d data
