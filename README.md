@@ -33,13 +33,13 @@ unzip data/multiwoz_2.0.zip -d data
 unzip data/multiwoz_2.1.zip -d data
 ```
 
-2. run Supervised Learning
+2. train with pretraining
 ```bash
 sh train.sh sl woz2.0 # For MultiWoz 2.0
 sh train.sh sl woz2.1 # For MultiWoz 2.1
 ```
 
-3. run Reinforcement Learning
+3. train with hierarchical reinforcement learning (HRL)
 ```bash
 sh train.sh rl woz2.0 # For MultiWoz 2.0
 sh train.sh rl woz2.1 # For MultiWoz 2.1
@@ -47,8 +47,8 @@ sh train.sh rl woz2.1 # For MultiWoz 2.1
 
 4. evaluate trained model
 ```bash
-sh test.sh sl woz2.0 5 # For MultiWoz 2.0 SL model
-sh test.sh sl woz2.1 5 # For MultiWoz 2.1 SL model
-sh test.sh rl woz2.0 2 # For MultiWoz 2.0 RL model 
-sh test.sh rl woz2.1 5 # For MultiWoz 2.1 RL model
+sh test.sh sl woz2.0 5 # For MultiWoz 2.0 pretrained model
+sh test.sh sl woz2.1 5 # For MultiWoz 2.1 pretrained model
+sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model 
+sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
 ```
