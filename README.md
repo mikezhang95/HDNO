@@ -47,8 +47,8 @@ sh train.sh rl woz2.1 # For MultiWoz 2.1
 
 4. evaluate trained model
 ```bash
-sh test.sh sl woz2.0 # For MultiWoz 2.0 SL model
-sh test.sh sl woz2.1 # For MultiWoz 2.1 SL model
-sh test.sh rl woz2.0 # For MultiWoz 2.0 RL model
-sh test.sh rl woz2.1 # For MultiWoz 2.1 RL model
+sh test.sh sl woz2.0 5 # For MultiWoz 2.0 SL model
+sh test.sh sl woz2.1 5 # For MultiWoz 2.1 SL model
+sh test.sh rl woz2.0 2 # For MultiWoz 2.0 RL model 
+sh test.sh rl woz2.1 5 # For MultiWoz 2.1 RL model
 ```
