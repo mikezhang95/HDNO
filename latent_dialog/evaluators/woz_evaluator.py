@@ -230,7 +230,6 @@ class MultiWozEvaluator(BaseEvaluator):
         match = 0
         success = 0
         # MATCH
-        # janhong: the evaluation mechanism:
         # for all domains, we just check whether the domain name has been all
         # informable and the inform rate is calculated based on the domain num
         for domain in goal.keys():
@@ -265,7 +264,7 @@ class MultiWozEvaluator(BaseEvaluator):
             for domain in domains_in_goal:
                 success_stat = 0
                 domain_success = 0
-                # : if the domain doesn't contain any requestables,
+                # if the domain doesn't contain any requestables,
                 # then it counts up for one success
                 if len(real_requestables[domain]) == 0:
                     success += 1
@@ -273,7 +272,7 @@ class MultiWozEvaluator(BaseEvaluator):
                     stats[domain][1] = success_stat
                     continue
                 # if values in sentences are super set of requestables
-                # : if possible requestng the extra requestables will not
+                # if possible requestng the extra requestables will not
                 # be punished
                 # and requesting the same requestable will not be punished
                 for request in set(provided_requestables[domain]):
