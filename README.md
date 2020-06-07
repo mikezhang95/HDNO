@@ -27,25 +27,25 @@ pip install -r requirements.txt
 ### Reproduce the result
 For the convenience of reproducing the results shown in paper, we give simple bash scripts to do it.
 
-1. prepare data
+1. preparing data
 ```
 unzip data/multiwoz_2.0.zip -d data
 unzip data/multiwoz_2.1.zip -d data
 ```
 
-2. train with pretraining
+2. pretraining
 ```bash
 sh train.sh sl woz2.0 # For MultiWoz 2.0
 sh train.sh sl woz2.1 # For MultiWoz 2.1
 ```
 
-3. train with hierarchical reinforcement learning (HRL)
+3. hierarchical reinforcement learning (HRL)
 ```bash
 sh train.sh rl woz2.0 # For MultiWoz 2.0
 sh train.sh rl woz2.1 # For MultiWoz 2.1
 ```
 
-4. evaluate trained model
+4. evaluating trained model
 ```bash
 sh test.sh sl woz2.0 5 # For MultiWoz 2.0 pretrained model
 sh test.sh sl woz2.1 5 # For MultiWoz 2.1 pretrained model
