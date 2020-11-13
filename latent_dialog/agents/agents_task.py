@@ -299,7 +299,7 @@ class HierarchicalRlAgent(RlAgent):
         self.loss = 0
 
         # estimate the loss using one MonteCarlo rollout
-        if self.args.low_level and self.curr_level=='low':
+        if self.args.low_level and (self.curr_level=='low' or self.args.synchron) :
             if self.args.success2reward:
                 for lp, r in zip(self.logprobs['low_level'], rewards['success']['low']):
                     self.loss -= lp * (1 - self.alpha) * r
@@ -312,7 +312,7 @@ class HierarchicalRlAgent(RlAgent):
             self.low_cnt += 1
 
         # add flag to control the freq of update on high level policy
-        if self.args.high_level and self.curr_level=='high':
+        if self.args.high_level and (self.curr_level=='high' or self.args.synchron) :
             if self.args.success2reward:
                 for lp, r in zip(self.logprobs['high_level'], rewards['success']['high']):
                     self.loss -= lp * (1 - self.alpha) * r
@@ -324,7 +324,7 @@ class HierarchicalRlAgent(RlAgent):
                     self.loss -= lp * self.alpha * r
             self.high_cnt += 1
 
-        if self.args.high_level and self.curr_level=='high':
+        if self.args.high_level and (self.curr_level=='high' or self.args.synchron) :
             self.opt_high.zero_grad()
             if self.args.train_state_extractor:
                 self.opt_state.zero_grad()
@@ -335,9 +335,10 @@ class HierarchicalRlAgent(RlAgent):
                 self.opt_state.step()
             if self.args.low_level:
                 if self.high_cnt == self.args.high_freq:
-                    self.curr_level = 'low'
+                    curr_level = 'low'
                     self.high_cnt = 0
-        elif self.args.low_level and self.curr_level=='low':
+
+        if self.args.low_level and (self.curr_level=='low' or self.args.synchron) :
             self.opt_low.zero_grad()
             if self.args.train_state_extractor:
                 self.opt_state.zero_grad()
@@ -348,8 +349,10 @@ class HierarchicalRlAgent(RlAgent):
                 self.opt_state.step()
             if self.args.high_level:
                 if self.low_cnt == self.args.low_freq:
-                    self.curr_level = 'high'
+                    curr_level = 'high'
                     self.low_cnt = 0
+
+        self.curr_level = curr_level
         self.update_n += 1
         if self.args.lr_scheduler and self.update_n%self.args.scheduler_decay_freq==0:
             self.opt_high_sch.step()

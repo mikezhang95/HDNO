@@ -229,7 +229,7 @@ class DecoderRNN(BaseRNN):
                     decoder_input= input_var.view(batch_size * beam_size, 1) # [b*k,1] input for next step
 
                     # 1.2 create next step decoder_hidden_state
-                    pp = candidates / vocab_size # [b,k]
+                    pp = candidates // vocab_size # [b,k]
                     predecessors = pp.clone()
                     for b, p in enumerate(pp):
                         predecessors[b] = p + b * beam_size
