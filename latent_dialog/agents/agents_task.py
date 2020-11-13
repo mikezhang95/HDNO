@@ -328,7 +328,10 @@ class HierarchicalRlAgent(RlAgent):
             self.opt_high.zero_grad()
             if self.args.train_state_extractor:
                 self.opt_state.zero_grad()
-            self.loss.backward()
+            if self.args.synchron:
+                self.loss.backward(retain_graph=True)
+            else:
+                self.loss.backward()
             nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
             self.opt_high.step()
             if self.args.train_state_extractor:
