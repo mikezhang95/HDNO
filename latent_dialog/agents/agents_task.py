@@ -324,38 +324,45 @@ class HierarchicalRlAgent(RlAgent):
                     self.loss -= lp * self.alpha * r
             self.high_cnt += 1
 
-        if self.args.high_level and (self.curr_level=='high' or self.args.synchron) :
-            self.opt_high.zero_grad()
-            if self.args.train_state_extractor:
-                self.opt_state.zero_grad()
-            if self.args.synchron:
-                self.loss.backward(retain_graph=True)
-            else:
+        if self.args.high_level and self.args.low_level and self.args.synchron :
+           self.opt_high.zero_grad()
+           self.opt_low.zero_grad()
+           if self.args.train_state_extractor:
+               self.opt_state.zero_grad()
+           self.loss.backward()
+           nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
+           self.opt_high.step()
+           self.opt_low.step()
+           if self.args.train_state_extractor:
+               self.opt_state.step()
+        else:
+            if self.args.high_level and self.curr_level=='high' :
+                self.opt_high.zero_grad()
+                if self.args.train_state_extractor:
+                    self.opt_state.zero_grad()
                 self.loss.backward()
-            nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
-            self.opt_high.step()
-            if self.args.train_state_extractor:
-                self.opt_state.step()
-            if self.args.low_level:
-                if self.high_cnt == self.args.high_freq:
-                    curr_level = 'low'
-                    self.high_cnt = 0
+                nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
+                self.opt_high.step()
+                if self.args.train_state_extractor:
+                    self.opt_state.step()
+                if self.args.low_level:
+                    if self.high_cnt == self.args.high_freq:
+                        self.curr_level = 'low'
+                        self.high_cnt = 0
+            elif self.args.low_level and self.curr_level=='low' :
+                self.opt_low.zero_grad()
+                if self.args.train_state_extractor:
+                    self.opt_state.zero_grad()
+                self.loss.backward()
+                nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
+                self.opt_low.step()
+                if self.args.train_state_extractor:
+                    self.opt_state.step()
+                if self.args.high_level:
+                    if self.low_cnt == self.args.low_freq:
+                        self.curr_level = 'high'
+                        self.low_cnt = 0
 
-        if self.args.low_level and (self.curr_level=='low' or self.args.synchron) :
-            self.opt_low.zero_grad()
-            if self.args.train_state_extractor:
-                self.opt_state.zero_grad()
-            self.loss.backward()
-            nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
-            self.opt_low.step()
-            if self.args.train_state_extractor:
-                self.opt_state.step()
-            if self.args.high_level:
-                if self.low_cnt == self.args.low_freq:
-                    curr_level = 'high'
-                    self.low_cnt = 0
-
-        self.curr_level = curr_level
         self.update_n += 1
         if self.args.lr_scheduler and self.update_n%self.args.scheduler_decay_freq==0:
             self.opt_high_sch.step()
