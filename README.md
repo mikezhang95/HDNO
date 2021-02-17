@@ -15,7 +15,7 @@ If you use any source codes included in this toolkit in your work, please cite t
 
 ### Repository Structure
 * configs: hyperparameters for different experiments
-* data: dialogue datset (MultiWowz 2.0 & MultiWoz 2.1)
+* data: dialogue dataset (MultiWowz 2.0 & MultiWoz 2.1)
 * latent_dialog: source code
 * visualize: visualize experiments result
 * human_evaluator.py: to evalute groud truth's performance
