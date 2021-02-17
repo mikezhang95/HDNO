@@ -1,9 +1,9 @@
 
 ## HDNO
 
-This is the codebase for ICLR 2021 paper (Modelling Hierarchical Structure between Dialogue Policy and Natural Language Generator with Option Framework for Task-oriented Dialogue System)[https://arxiv.org/abs/2006.06814].
+This is the codebase for ICLR 2021 paper [Modelling Hierarchical Structure between Dialogue Policy and Natural Language Generator with Option Framework for Task-oriented Dialogue System](https://arxiv.org/abs/2006.06814).
 
-If you use any source codes included in this toolkit in your work, please cite the following paper. The bibtex are listed below:     
+If you use any source codes included in this toolkit in your work, please cite the following paper. The bibtex is listed below:     
 ```
 @article{wang2020modelling,
   title={Modelling hierarchical structure between dialogue policy and natural language generator with option framework for task-oriented dialogue system},
