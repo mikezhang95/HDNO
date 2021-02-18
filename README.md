@@ -70,10 +70,10 @@ We have also released several trained models in the `model_save` folder, which c
 
 ### Main results
 
-* The table shows the main results of `HDNO` on MultiWoz 2.0 and Multiwoz 2.1 evaluated with the automatic evaluation metrics.       
+* The table shows the main results of `HDNO` on MultiWoz 2.0 and MultiWoz 2.1 evaluated with the automatic evaluation metrics.       
 ![result](https://github.com/mikezhang95/HDNO/blob/master/visualize/result.png)
 
-* The diagram demonstrates latent dialogue acts of HDNO clustered in 8 categories.    
+* The diagram demonstrates latent dialogue acts of `HDNO` clustered in 8 categories.    
 ![cluster](https://github.com/mikezhang95/HDNO/blob/master/visualize/cluster.png)
 
 
