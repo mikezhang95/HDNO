@@ -71,6 +71,6 @@ We have also released several trained models in the `model_save` folder, which c
 ### Main results
 
 ![Mail results on MultiWoz 2.0 and Multiwoz 2.1 Compared with other baselines](https://github.com/mikezhang95/HDNO/blob/master/visualize/result.png)
-![Clustering results of the latent dialogue acts](https://github.com/mikezhang95/HDNO/blob/master/visualize/cluster.pdf)
+![Clustering results of the latent dialogue acts](https://github.com/mikezhang95/HDNO/blob/master/visualize/cluster.png)
 
 
