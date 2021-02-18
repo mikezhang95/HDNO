@@ -65,8 +65,10 @@ sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model
 sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
 ```
 
-We have also released several trained models in the `model_save` folder, which can be evaluated directly to reproduce the results in paper. `visualize/plot_benchmark.ipynb` also provides a detailed process to draw figures used in paper.
-
+We have also released several trained models in the `model_save` folder, which can be evaluated directly to reproduce the results in paper. To achieve the best result on MultiWoz 2.0 and MultiWoz 2.1 with released models,  just run             
+```bash
+sh reproduce.sh
+```
 
 ### Main results
 
