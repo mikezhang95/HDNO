@@ -99,6 +99,7 @@ class HDNO(BaseModel):
         self.gauss_kl = NormKLLoss(unit_average=True)
         self.zero = cast_type(th.zeros(1), FLOAT, self.use_gpu)
 
+
     def valid_loss(self, losses, batch_cnt=None):
         total_loss = 0
         for key, loss in losses.items():
@@ -107,6 +108,7 @@ class HDNO(BaseModel):
             else:
                 total_loss += loss
         return total_loss
+
 
     def forward(self, data_feed, mode, gen_type='greedy', use_py=None, return_latent=False, epoch=np.inf):
         # user_utts, sys_utts
@@ -217,11 +219,13 @@ class HDNO(BaseModel):
                 result['nll_%s'%name] = self.nll(dec_outputs, labels) 
         return result
 
+
     def gaussian_logprob(self, mu, logvar, sample_z):
         var = th.exp(logvar)
         constant = float(-0.5 * np.log(2*np.pi))
         logprob = constant - 0.5 * logvar - th.pow((mu-sample_z), 2) / (2.0*var)
         return logprob
+
 
     def forward_rl(self, data_feed, max_words, temp=0.1, args=None):
         # user_utts, sys_utts
