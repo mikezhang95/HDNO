@@ -36,28 +36,38 @@ conda activate hdno
 pip install -r requirements.txt     
 ```
 
-### Reproduce the result
-For the convenience of reproducing the results shown in paper, we give simple bash scripts to do it.
-
-1. preparing data
+### Preparing data
+Before any operations below, please prepare your data following the script:
 ```
 unzip data/multiwoz_2.0.zip -d data
 unzip data/multiwoz_2.1.zip -d data
 ```
 
-2. pretraining
+### Reproduce the result
+
+We give a script that can train the models of HDNO based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
+```bash
+sh reproduce.sh
+```
+
+After training, it will be aumatically evaluated and show the results on the paper.
+
+### Freely train your models
+For the convenience for freely training models, we give simple bash scripts to do it.
+
+1. pretraining
 ```bash
 sh train.sh sl woz2.0 # For MultiWoz 2.0
 sh train.sh sl woz2.1 # For MultiWoz 2.1
 ```
 
-3. hierarchical reinforcement learning (HRL)
+2. hierarchical reinforcement learning (HRL)
 ```bash
 sh train.sh rl woz2.0 # For MultiWoz 2.0
 sh train.sh rl woz2.1 # For MultiWoz 2.1
 ```
 
-4. evaluating trained model
+3. evaluating trained model
 ```bash
 sh test.sh sl woz2.0 5 # For MultiWoz 2.0 pretrained model
 sh test.sh sl woz2.1 5 # For MultiWoz 2.1 pretrained model
@@ -65,18 +75,7 @@ sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model
 sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
 ```
 
-We have also released several trained models in the `model_save` folder, which can be directly evaluated to reproduce the results in paper. 
-
-5. Also, we give a script that can train the models of HDNO based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
-```bash
-sh reproduce.sh
-```
-
-After training, run the following script to obtain the test results on the paper:
-```bash
-sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model 
-sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
-```
+We have also released several trained models in the `model_save` folder, which can be directly evaluated to reproduce the results in paper. If you would like to evaluate the results for the models we provide, you should manually create a folder called `outputs` under the directory `HDNO`. Second, you need to copy the related folders, e.g., `woz2.0/alpha_0.0001` to `outputs`. Third, you need to rename the copied folder name, e.g., `alpha_0.0001` to the config name you use, e.g., `rl_hdno_woz2.0`.
 
 ### Main results
 
