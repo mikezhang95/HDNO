@@ -76,6 +76,7 @@ After training, run the following script to obtain the test results on the paper
 ```bash
 sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model 
 sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
+```
 
 ### Main results
 
