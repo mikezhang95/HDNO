@@ -49,7 +49,7 @@ We give a script that can train the models of HDNO based on the pretrained model
 sh reproduce.sh
 ```
 
-After training, it will be aumatically evaluated and show the results on the paper.
+After training, the models will be aumatically evaluated and the results on the paper will be shown.
 
 ### Freely train your models
 For the convenience for freely training models, we give simple bash scripts to do it.
