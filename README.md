@@ -44,12 +44,10 @@ unzip data/multiwoz_2.1.zip -d data
 
 ### Reproduce the result
 
-We give a script that can train the models of HDNO based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
+We give a script that can evaluate the models of HDNO based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
 ```bash
 sh reproduce.sh
 ```
-
-After training, the models will be aumatically evaluated and the results on the paper will be shown.
 
 ### Freely train your models
 For the convenience for freely training models, we give simple bash scripts to do it.
@@ -73,8 +71,6 @@ sh test.sh sl woz2.1 5 # For MultiWoz 2.1 pretrained model
 sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model 
 sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
 ```
-
-We have also released several trained models in the `model_save` folder, which can be directly evaluated to get the results in paper. If you would like to evaluate the results for the models we provide, you should manually create a folder called `outputs` under the directory `HDNO`. Second, you need to copy the related folders, e.g., `woz2.0/alpha_0.0001` to `outputs`. Third, you need to rename the copied folder name, e.g., `alpha_0.0001` to the config name you use, e.g., `rl_hdno_woz2.0`.
 
 ### Main results
 
