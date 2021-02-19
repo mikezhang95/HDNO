@@ -10,3 +10,4 @@ latent_dialog/evaluators/__pycache__
 latent_dialog/models/__pycache__/
 latent_dialog/normalizer/__pycache__/
 *.pyc
+visualize/.ipynb_checkpoints
