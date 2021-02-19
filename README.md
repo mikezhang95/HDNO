@@ -42,9 +42,9 @@ unzip data/multiwoz_2.0.zip -d data
 unzip data/multiwoz_2.1.zip -d data
 ```
 
-### Reproduce the result
+### Reproduce the results
 
-We give a script that can evaluate `HDNO` based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
+We give a script that can evaluate `HDNO` and show the results shown on the paper, based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
 ```bash
 sh reproduce.sh
 ```
