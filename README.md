@@ -23,7 +23,6 @@ If you use any source codes included in this toolkit in your work, please cite t
 
 
 ### Requirements
-
 1. install conda environment                                        
 ```bash
 conda create -n hdno python=3.6
@@ -35,7 +34,7 @@ conda activate hdno
 pip install -r requirements.txt     
 ```
 
-### Preparing data
+### Prepare the data
 Before any operations below, please prepare your data following the script:
 ```
 unzip data/multiwoz_2.0.zip -d data
@@ -43,13 +42,12 @@ unzip data/multiwoz_2.1.zip -d data
 ```
 
 ### Reproduce the results
-
 We give a script that can evaluate `HDNO` and show the results shown on the paper, based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
 ```bash
 sh reproduce.sh
 ```
 
-### Freely train your models
+### Train your own models
 For the convenience for freely training models, we give simple bash scripts to do it.
 
 1. pretraining
