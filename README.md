@@ -67,7 +67,7 @@ sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
 
 We have also released several trained models in the `model_save` folder, which can be directly evaluated to reproduce the results in paper. 
 
-5. Also, we give a script that can train the model of HDNO based on the pretrained model we provide on MultiWoz 2.0 and MultiWoz 2.1:           
+5. Also, we give a script that can train the models of HDNO based on the pretrained models we provide on MultiWoz 2.0 and MultiWoz 2.1:           
 ```bash
 sh reproduce.sh
 ```
