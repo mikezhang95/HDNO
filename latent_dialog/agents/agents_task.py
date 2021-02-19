@@ -108,14 +108,6 @@ class HierarchicalRlAgent(RlAgent):
         # for n, p in self.model.named_parameters():
         #     if 'utt' in n or 'c2z' in n or 'inter_attention' in n:
         #         print ('This is the name {}'.format(n))
-        if self.args.train_state_extractor:
-            self.opt_state = optim.SGD(
-                        [p for n, p in self.model.named_parameters() if 'utt' in n ],
-                        lr=self.args.state_extractor_lr,
-                        momentum=self.args.momentum,
-                        nesterov=(self.args.nesterov and self.args.momentum > 0),
-                        weight_decay=self.args.weight_decay
-                        )
         if self.args.high_level:
             self.opt_high = optim.SGD(
                 [p for n, p in self.model.named_parameters() if 'c2z' in n],
@@ -124,8 +116,6 @@ class HierarchicalRlAgent(RlAgent):
                 nesterov=(self.args.nesterov and self.args.momentum > 0),
                 weight_decay=self.args.weight_decay
                 )
-            if self.args.lr_scheduler:
-                self.opt_high_sch = optim.lr_scheduler.MultiplicativeLR(self.opt_high, lambda episode: self.args.scheduler_decay)
         if self.args.low_level:
             if self.args.end2end:
                 self.opt_low = optim.SGD(
@@ -143,8 +133,6 @@ class HierarchicalRlAgent(RlAgent):
                     nesterov=(self.args.nesterov and self.args.momentum > 0),
                     weight_decay=self.args.weight_decay
                     )
-            if self.args.lr_scheduler:
-                self.opt_low_sch = optim.lr_scheduler.MultiplicativeLR(self.opt_low, lambda episode: self.args.scheduler_decay)
         self.update_n = 0
         self.all_rewards = {'success': [], 'match': [], 'bleu': [], 'nll': []}
         if self.args.kl:
@@ -327,47 +315,30 @@ class HierarchicalRlAgent(RlAgent):
         if self.args.high_level and self.args.low_level and self.args.synchron :
            self.opt_high.zero_grad()
            self.opt_low.zero_grad()
-           if self.args.train_state_extractor:
-               self.opt_state.zero_grad()
            self.loss.backward()
            nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
            self.opt_high.step()
            self.opt_low.step()
-           if self.args.train_state_extractor:
-               self.opt_state.step()
         else:
             if self.args.high_level and self.curr_level=='high' :
                 self.opt_high.zero_grad()
-                if self.args.train_state_extractor:
-                    self.opt_state.zero_grad()
                 self.loss.backward()
                 nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
                 self.opt_high.step()
-                if self.args.train_state_extractor:
-                    self.opt_state.step()
                 if self.args.low_level:
                     if self.high_cnt == self.args.high_freq:
                         self.curr_level = 'low'
                         self.high_cnt = 0
             elif self.args.low_level and self.curr_level=='low' :
                 self.opt_low.zero_grad()
-                if self.args.train_state_extractor:
-                    self.opt_state.zero_grad()
                 self.loss.backward()
                 nn.utils.clip_grad_norm_(self.model.parameters(), self.rl_clip)
                 self.opt_low.step()
-                if self.args.train_state_extractor:
-                    self.opt_state.step()
                 if self.args.high_level:
                     if self.low_cnt == self.args.low_freq:
                         self.curr_level = 'high'
                         self.low_cnt = 0
 
         self.update_n += 1
-        if self.args.lr_scheduler and self.update_n%self.args.scheduler_decay_freq==0:
-            self.opt_high_sch.step()
-            self.opt_low_sch.step()
-        if self.args.alpha_scheduler and self.update_n%self.args.alpha_rise_freq==0:
-            self.alpha *= (1+self.args.alpha_rise)
         if self.args.rl_clip_scheduler and self.update_n%self.args.rl_clip_freq==0:
             self.rl_clip *= self.args.rl_clip_decay
