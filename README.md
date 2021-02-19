@@ -17,7 +17,6 @@ If you use any source codes included in this toolkit in your work, please cite t
 * configs: hyperparameters for different experiments
 * data: dialogue dataset (MultiWowz 2.0 & MultiWoz 2.1)
 * latent_dialog: source code
-* visualize: visualize experiments result
 * human_evaluator.py: to evalute groud truth's performance
 * supervised.py: main entry for Supervised Learning
 * reinforce.py: main entry for Reinforcement Learning
