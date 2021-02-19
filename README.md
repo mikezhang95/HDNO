@@ -65,14 +65,14 @@ sh test.sh rl woz2.0 2 # For MultiWoz 2.0 HRL model
 sh test.sh rl woz2.1 5 # For MultiWoz 2.1 HRL model
 ```
 
-We have also released several trained models in the `model_save` folder, which can be evaluated directly to reproduce the results in paper. To achieve the best result on MultiWoz 2.0 and MultiWoz 2.1 with released models,  just run             
+We have also released several trained models in the `model_save` folder, which can be evaluated directly to reproduce the results in paper. To achieve the best result on MultiWoz 2.0 and MultiWoz 2.1 with released models, just run                    
 ```bash
 sh reproduce.sh
 ```
 
 ### Main results
 
-* The table shows the main results of `HDNO` on MultiWoz 2.0 and MultiWoz 2.1 evaluated with the automatic evaluation metrics.       
+* The table shows the main test results of `HDNO` on MultiWoz 2.0 and MultiWoz 2.1 evaluated with the automatic evaluation metrics.       
 ![result](https://github.com/mikezhang95/HDNO/blob/master/visualize/result.png)
 
 * The diagram demonstrates latent dialogue acts of `HDNO` clustered in 8 categories.    

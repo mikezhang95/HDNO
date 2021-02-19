@@ -47,7 +47,10 @@ if not os.path.exists(saved_path):
 
 
 pretrain_path = './outputs/' + rl_config.pretrain_folder + '/'   # path for sl
-sl_config = Pack(json.load(open(os.path.join(pretrain_path, 'config.json'))))
+if os.path.exists(os.path.join(pretrain_path, 'config.json')):
+    sl_config = Pack(json.load(open(os.path.join(pretrain_path, 'config.json'))))
+else:
+    sl_config = Pack(json.load(open(rl_config_path.replace("rl", "sl"))))
 sl_config['dropout'] = 0.0
 sl_config['use_gpu'] = rl_config.use_gpu
 sl_config['gen_type'] = args.gen_type
